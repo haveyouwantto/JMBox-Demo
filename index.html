@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JMBox</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" id="meta-theme-color" content="#00796b" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="waterfall.css" />
+
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+    <!-- Element to respond click event -->
+    <div id="collapse" class="hidden"></div>
+
+    <!-- Top Bar -->
+    <div class="nav shadow" id="head">
+
+        <!-- Left -->
+        <div class="headerLeft">
+            <a id="back" class="icon menu-button round hidden">&#57347; </a>
+            <a id="home" class="icon menu-button round hidden">&#57348;</a>
+            <div id="title">JMBox</div>
+        </div>
+
+        <!-- Right -->
+        <div class="headerRight">
+            <a id="menu" class="icon menu-button round">&#57349;</a>
+            <div class="menu shadow">
+                <a id="refresh" class="menu-item">
+                    <icon>&#57360;</icon>Refresh
+                </a>
+
+                <a id="open-settings-button" class="menu-item">
+                    <icon>&#57367;</icon>Settings
+                </a>
+                <a id="about-button" class="menu-item">
+                    <icon>&#57352;</icon>About
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Player control -->
+    <div id="bar" class="shadow">
+        <div id="progress" class="slider">
+            <div id="bufferedtime"></div>
+            <div id="playtime" class="slider-inner"></div>
+        </div>
+        <div id="controls">
+            <div id="controlsLeft" class="bottom-button">
+                <div id="songTitle"></div>
+            </div>
+            <div id="controlsMiddle">
+                <a id="prev" class="icon round bottom-button controls">&#57346;</a>
+                <a id="play" class="icon round bottom-button controls">&#57344;</a>
+                <a id="next" class="icon round bottom-button controls">&#57345;</a>
+                <div id="time">
+                    <div id="timeDisplay">00:00</div>
+                    <div class="seperater">/</div>
+                    <div id="durationDisplay">00:00</div>
+                </div>
+            </div>
+            <div id="controlsRight">
+                <a class="icon round" id="volume-icon">&#57365;</a>
+                <div id="volume" class="slider">
+                    <div id="volume-inner" class="slider-inner"></div>
+                </div>
+                <a id="playMode" class="icon round bottom-button controls">&#11122;</a>
+                <a id="bottomMenu" class="icon round bottom-button">&#57349;</a>
+                <div class="bottom-menu shadow">
+                    <a id="locate" class="menu-item">
+                        <icon>&#57351;</icon>Locate File
+                    </a>
+                    <a id="midiInfo" class="menu-item">
+                        <icon>&#57352;</icon>MIDI Info
+                    </a>
+                    <a id="wav" class="menu-item">
+                        <icon>&#57353;</icon>Audio File
+                    </a>
+                    <a id="mid" class="menu-item">
+                        <icon>&#57354;</icon>MIDI File
+                    </a>
+                    <a id="playModeAlt" class="menu-item">
+                        <icon>&#57355;</icon>
+                        <div style="display: inline;">Single</div>
+                    </a>
+                    <a id="replay" class="menu-item">
+                        <icon>&#57360;</icon>Replay
+                    </a>
+                </div>
+            </div>
+        </div>
+        <audio autoplay id="audio"></audio>
+        <!--<a id="loop" class="icon button shadow colored">&#11119;</a>-->
+    </div>
+
+    <!-- Waterfall -->
+    <div id="waterfall" class="hidden">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- Files -->
+    <div id="content"></div>
+
+    <!-- Dialog -->
+    <dialog id="settings-dialog" class="shadow">
+        <div class="title">Settings</div>
+
+        <div class="dialog-container">
+            <div class="dialog-section" id="general-section">General
+                <a id="dark" class="dialog-item">
+                    <icon>&#57350;</icon>Dark Mode
+                </a>
+            </div>
+
+            <div class="dialog-section" id="player-section">Players
+                <a id="audioPlayer" class="dialog-item">
+                    <icon>&#57361;</icon>Use Audio Player
+                </a>
+                <a id="picoAudioPlayer" class="dialog-item">
+                    <icon>&#57364;</icon>Use PicoAudio Synthesizer
+                </a>
+            </div>
+
+            <div class="dialog-section" id="audio-section">Audio
+                <a id="midiSrc" class="dialog-item">
+                    <icon>&#57362;</icon>Use MIDI as source
+                </a>
+            </div>
+
+            <div class="dialog-section" id="picoaudio-section">PicoAudio
+                <a id="picoAudioMIDI" class="dialog-item">
+                    <icon>&#57362;</icon>Use Web MIDI
+                </a>
+                <a id="picoAudioMIDIDevice" class="dialog-item">
+                    <icon>&#57368;</icon>MIDI Device <select id="devices"></select>
+                </a>
+            </div>
+
+            <div class="dialog-section">Piano Roll
+                <a id="spanDurationSetting" class="dialog-item">
+                    <icon>&#57367;</icon>Span Duration <input id="spanDuration" type="number" min="0" max="10"
+                        step="0.1" value="4"></input>
+                </a>
+                <a id="maxNoteDurationSetting" class="dialog-item">
+                    <icon>&#57367;</icon>Max Note Duration <input id="maxNoteDuration" type="number" min="1" max="60"
+                        step="1" value="30"></input>
+                </a>
+            </div>
+        </div>
+        <div class="dialog-button-container">
+            <a class="dialog-button" id="close-settings-button">Close</a>
+        </div>
+
+    </dialog>
+    <dialog id="common-dialog" class="shadow">
+        <div class="title">Dialog</div>
+        <div class="dialog-container"></div>
+        <div class="dialog-button-container">
+            <a class="dialog-button" id="close-dialog-button">Close</a>
+        </div>
+    </dialog>
+
+
+    <script src="js/utils.js"></script>
+    <script src="js/PicoAudio.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/waterfall.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/pathman.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

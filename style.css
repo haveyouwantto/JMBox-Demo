@@ -1,0 +1,631 @@
+:root {
+    --theme-color: #00796b;
+    --text-color: #202020;
+    --bg-color: #white;
+    --bg-color-alt: white;
+    --hover-color: #00000020;
+    --bar-color: #e0e0e0;
+}
+
+.icon {
+    font-family: icon;
+    font-size: 26px;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin: 5px;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+icon {
+    display: inline;
+    font-family: icon;
+    font-size: 26px;
+    user-select: none;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+file-icon {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-family: icon;
+    font-size: 26px;
+    user-select: none;
+    text-decoration: none;
+    margin-right: 10px;
+    color: var(--theme-color);
+}
+
+.icon-checked {
+    color: var(--theme-color);
+}
+
+
+#audio {
+    width: 100%;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 65px;
+    margin-top: 58px;
+}
+
+.menu-button {
+    transition: background-color 0.15s;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-button:hover {
+    background-color: #ffffff40;
+}
+
+.menu-button-disabled {
+    background-color: #616161;
+}
+
+.colored {
+    background-color: var(--theme-color);
+}
+
+
+.shadow {
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 40%);
+}
+
+.file {
+    width: 50vw;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    border-bottom: 1px solid #808080;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background-color 0.15s;
+}
+
+.file:hover {
+    background-color: var(--hover-color);
+}
+
+.file-locate {
+    animation: locate 1.5s ease-in-out 0s;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: sans-serif;
+    margin: unset;
+}
+
+.nav {
+    background-color: var(--theme-color);
+    padding: 4px 8px 4px 8px;
+    font-size: 20px;
+    color: white;
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.headerLeft,
+.headerRight {
+    display: flex;
+    align-items: center;
+}
+
+.headerLeft {
+    width: 100%;
+    overflow: hidden;
+}
+
+.headerRight {
+    margin-right: 16px;
+}
+
+#title {
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.menu {
+    position: fixed;
+    top: 50px;
+    right: 8px;
+    background-color: var(--bg-color-alt);
+    font-family: sans-serif;
+    font-size: 16px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    overflow: hidden auto;
+    max-height: 50vh;
+    z-index: 6;
+}
+
+.menu-item {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color 0.15s;
+    cursor: pointer;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 16px;
+    user-select: none;
+}
+
+.menu-item:hover {
+    background-color: var(--hover-color);
+}
+
+#picoAudioMIDI {
+    display: none;
+}
+
+select {
+    /* style the select element */
+    display: block;
+    border: none;
+    font-family: sans-serif;
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: #00000000;
+}
+
+select:focus {
+    outline: 2px solid var(--theme-color);
+}
+
+dialog select {
+    margin-left: 36px;
+}
+
+select option {
+    color: var(--text-color);
+    background-color: var(--bg-color-alt);
+}
+
+input[type=number] {
+    border: none;
+    background-color: #0000;
+    font-size: 1rem;
+    color: var(--text-color);
+    border-bottom: 1px solid #80808060;
+    transition: border-bottom 0.25s;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-bottom: 2px solid var(--theme-color);
+  }
+
+#collapse {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+}
+
+/* Player Bar */
+#bar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    background-color: var(--bg-color-alt);
+    width: 100%;
+    height: 60px;
+}
+
+#progress {
+    width: 100%;
+    position: relative;
+}
+
+#progress #bufferedtime {
+    width: 0;
+    background-color: #80808060;
+    height: 100%;
+    position: absolute;
+    transition: width 0.2s;
+}
+
+#progress #playtime {
+    position: absolute;
+}
+
+#volume {
+    width: 9em;
+    margin-right: 5px;
+}
+
+#volume-inner {
+    width: 100%;
+}
+
+.slider {
+    height: 8px;
+    cursor: pointer;
+    background-color: var(--bar-color);
+}
+
+.slider-inner {
+    width: 0;
+    background-color: var(--theme-color);
+    height: 100%;
+}
+
+#controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 8px;
+}
+
+#controlsLeft,
+#controlsMiddle,
+#controlsRight {
+    height: 50px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+#controlsLeft {
+    padding-left: 8px;
+}
+
+#controlsMiddle {
+    justify-content: center;
+}
+
+#controlsRight {
+    justify-content: right;
+}
+
+#songTitle {
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    font-size: 92%;
+    max-height: 100%;
+    color: var(--text-color);
+}
+
+.bottom-button {
+    transition: background-color 0.15s;
+    cursor: pointer;
+}
+
+.bottom-button:hover {
+    background-color: var(--hover-color);
+}
+
+.controls {
+    color: var(--theme-color);
+}
+
+#time {
+    display: flex;
+    font-size: 16px;
+    margin-left: 8px;
+    color: var(--text-color);
+}
+
+.seperater {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+#bottomMenu {
+    z-index: 6;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.bottom-menu {
+    position: fixed;
+    bottom: 50px;
+    right: 8px;
+    background-color: var(--bg-color-alt);
+    font-family: sans-serif;
+    font-size: 16px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    overflow: hidden auto;
+    max-height: 50vh;
+}
+
+/* Dialog */
+dialog {
+    background-color: var(--bg-color-alt);
+    border: none;
+    border-radius: 4px;
+    max-height: 70%;
+    max-width: 500px;
+    font-family: sans-serif;
+    padding: 8px;
+}
+
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+dialog .title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 9px 16px 9px;
+    color: var(--text-color);
+}
+
+dialog[open] {
+    animation: dialogFadeIn 0.25s ease-out 0s;
+}
+
+dialog.fade-out {
+    animation: fadeOut 0.2s ease-out 0s;
+}
+
+.dialog-item {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color 0.15s;
+    cursor: pointer;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 16px;
+    user-select: none;
+}
+
+.dialog-section {
+    display: flex;
+    flex-direction: column;
+    padding-top: 12px;
+    padding-left: 12px;
+    padding-right: 16px;
+    color: var(--theme-color);
+}
+
+.dialog-section .dialog-item {
+    padding-left: 0;
+}
+
+.dialog-item:hover {
+    background-color: var(--hover-color);
+}
+
+.dialog-button {
+    color: var(--theme-color);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 4px;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.15s;
+    user-select: none;
+}
+
+.dialog-button:hover {
+    background-color: var(--hover-color);
+}
+
+.dialog-button-container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+/* Generic Attributes */
+.round {
+    border-radius: 999px;
+}
+
+.link {
+    color: var(--theme-color);
+}
+
+.link:visited {
+    color: var(--theme-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(50%, -50%) scale(0.1);
+    }
+
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes bottomFadeIn {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(50%, 50%) scale(0.1);
+    }
+
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes dialogFadeIn {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes locate {
+    from {
+        color: white;
+        background-color: var(--theme-color);
+    }
+
+    to {
+        color: var(--text-color);
+        background-color: unset;
+    }
+}
+
+.menu-hidden {
+    animation: fadeOut 0.2s ease-out 0s;
+    visibility: hidden;
+}
+
+.menu-visible {
+    animation: fadeIn 0.25s ease-out 0s;
+    visibility: visible;
+}
+
+.bottom-menu-hidden {
+    animation: fadeOut 0.2s ease-out 0s;
+    visibility: hidden;
+}
+
+.bottom-menu-visible {
+    animation: bottomFadeIn 0.25s ease-out 0s;
+    visibility: visible;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Scroll Bar*/
+html::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: var(--theme-color);
+}
+
+html::-webkit-scrollbar-track {
+    background: var(--bar-color);
+}
+
+@font-face {
+    font-family: icon;
+    src: url('icon.woff2');
+}
+
+@media only screen and (max-width: 1000px) {
+
+    #volume {
+        width: 10vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .file {
+        width: unset;
+        overflow-x: hidden;
+        overflow-wrap: anywhere;
+    }
+
+    .seperater,
+    #durationDisplay {
+        display: none;
+    }
+
+    #content {
+        align-items: stretch;
+    }
+
+}
+
+@media only screen and (max-width: 680px) {
+
+    #volume,
+    #volume-icon {
+        display: none;
+    }
+
+    #controlsMiddle,
+    #controlsRight {
+        width: unset;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    #playMode {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 512px) {
+    #time {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    #prev {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 384px) {
+    #next {
+        display: none;
+    }
+}
