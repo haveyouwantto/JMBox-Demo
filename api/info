@@ -1,1 +1,1 @@
-{"capabilities": {"play": false, "midi": true}, "themeColor": "#00796b", "serverName": "JMBox Online Demo"}
+{"capabilities": {"play": true, "midi": true}, "themeColor": "#00796b", "serverName": "JMBox Online Demo"}

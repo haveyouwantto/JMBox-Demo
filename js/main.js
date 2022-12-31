@@ -159,7 +159,7 @@ function play(dir, file) {
     let url = dir + "/" + encodeURIComponent(file);
 
     document.title = serverName + " - " + file;
-    wav.setAttribute("href", "api/play" + url);
+    wav.setAttribute("href", "api/play" + url.replace('.mid','.mp3'));
     mid.setAttribute("href", "api/midi" + url);
     midiInfo.setAttribute("value", url);
     songTitle.innerText = file;

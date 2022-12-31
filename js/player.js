@@ -61,7 +61,7 @@ function AudioPlayer() {
      * @param {Function} callback
      */
     this.load = function (path, callback) {
-        this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path;
+        this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace('.mid','.mp3');
         updateBuffer(0, 1);
         fetch("api/midi" + path).then(r => {
             if (r.ok) {
