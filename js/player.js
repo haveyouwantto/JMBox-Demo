@@ -53,6 +53,8 @@ let midiDeviceList = {};
 /**
  * Audio Player
  */
+
+let audioInit = false;
 function AudioPlayer() {
     this.audio = $("#audio");
     /**
@@ -61,7 +63,7 @@ function AudioPlayer() {
      * @param {Function} callback
      */
     this.load = function (path, callback) {
-        this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace('.mid','.mp3');
+        this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace("mid","mp3");
         updateBuffer(0, 1);
         fetch("api/midi" + path).then(r => {
             if (r.ok) {
@@ -82,7 +84,9 @@ function AudioPlayer() {
      * Play the audio
      */
     this.play = function () {
-        navigator.mediaSession.playbackState = 'playing';
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'playing';
+        }
         playButton.innerText = '\ue00f';
         paused = false;
         this.audio.play();
@@ -92,7 +96,9 @@ function AudioPlayer() {
      * Pause the audio
      */
     this.pause = function () {
-        navigator.mediaSession.playbackState = 'paused';
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'paused';
+        }
         playButton.innerText = '\ue000';
         paused = true;
         this.audio.pause();
@@ -152,26 +158,30 @@ function AudioPlayer() {
         this.audio.volume = volume;
     }
 
-    this.audio.addEventListener('pause', e => {
-        this.pause();
-    });
+    if (!audioInit) {
+        this.audio.addEventListener('pause', e => {
+            this.pause();
+        });
 
-    this.audio.addEventListener('play', e => {
-        this.play();
-    })
+        this.audio.addEventListener('play', e => {
+            this.play();
+        })
 
-    this.audio.addEventListener('timeupdate', e => {
-        updatePlayback();
-        for (let i = 0; i < this.audio.buffered.length; i++) {
-            let endTime = this.audio.buffered.end(i);
-            if (endTime > this.audio.currentTime) {
-                updateBuffer(endTime, this.audio.duration);
-                break;
+        this.audio.addEventListener('timeupdate', e => {
+            updatePlayback();
+            for (let i = 0; i < this.audio.buffered.length; i++) {
+                let endTime = this.audio.buffered.end(i);
+                if (endTime > this.audio.currentTime) {
+                    updateBuffer(endTime, this.audio.duration);
+                    break;
+                }
             }
-        }
-    })
+        })
 
-    this.audio.addEventListener('ended', onended);
+        this.audio.addEventListener('ended', onended);
+
+        audioInit = true;
+    }
 }
 
 // singleton picoaudio
@@ -180,6 +190,7 @@ let picoAudio = null;
 function PicoAudioPlayer() {
     this.paused = true;
     this.lastPausedTime = 0;
+    this.intervalId = 0;
     if (picoAudio == null) {
         picoAudio = new PicoAudio();
         picoAudio.init();
@@ -210,27 +221,32 @@ function PicoAudioPlayer() {
      * Play the audio
      */
     this.play = function () {
-        navigator.mediaSession.playbackState = 'playing';
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'playing';
+        }
         if (this.isEnded()) this.seek(0);
         playButton.innerText = '\ue00f';
         paused = false;
         this.paused = false;
         picoAudio.play();
-        updatePlayback();
+        this.intervalId = setInterval(updatePlayback, 100);
     }
 
     /**
      * Pause the audio
      */
     this.pause = function () {
-        navigator.mediaSession.playbackState = 'paused';
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'paused';
+        }
         playButton.innerText = '\ue000';
         this.lastPausedTime = this.currentTime();
 
         paused = true;
         this.paused = true;
         picoAudio.pause();
-        updatePlayback();
+
+        clearInterval(this.intervalId);
     }
 
     /**
@@ -274,6 +290,7 @@ function PicoAudioPlayer() {
 
     this.stop = function () {
         picoAudio.stop();
+        clearInterval(this.intervalId);
     }
 
     this.isPaused = function () {
@@ -296,23 +313,23 @@ function PicoAudioPlayer() {
         picoAudio.setMasterVolume(volume);
     }
 
-    picoAudio.addEventListener('noteOn', e => {
-        updatePlayback();
-    });
+    // picoAudio.addEventListener('noteOn', e => {
+    //     updatePlayback();
+    // });
 
-    picoAudio.addEventListener('noteOff', e => {
-        updatePlayback();
-    });
+    // picoAudio.addEventListener('noteOff', e => {
+    //     updatePlayback();
+    // });
 
-    picoAudio.addEventListener('play', e => {
-        updatePlayback();
-    });
+    // picoAudio.addEventListener('play', e => {
+    //     updatePlayback();
+    // });
 
-    picoAudio.addEventListener('songEnd', e => {
-        if (!picoAudio.isLoop()) this.pause();
-        updatePlayback();
-        onended();
-    });
+    // picoAudio.addEventListener('songEnd', e => {
+    //     if (!picoAudio.isLoop()) this.pause();
+    //     updatePlayback();
+    //     onended();
+    // });
 
     setupWebMIDI();
 }
@@ -349,6 +366,8 @@ if (window.isSecureContext) {
         setupWebMIDI();
         save();
     });
+} else {
+    $("#picoaudio-section").style.display = "none";
 }
 updateChecker(midiBtn, config.webmidi);
 

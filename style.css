@@ -95,8 +95,8 @@ file-icon {
     padding: 5px 10px;
     display: flex;
     align-items: center;
-    min-height: 40px;
-    border-bottom: 1px solid #808080;
+    min-height: 40px;    
+    border-bottom: 1px solid #80808060;
     cursor: pointer;
     color: var(--text-color);
     transition: background-color 0.15s;
@@ -374,6 +374,7 @@ dialog {
     max-width: 500px;
     font-family: sans-serif;
     padding: 8px;
+    z-index: 25;
 }
 
 .dialog-container {
@@ -391,6 +392,8 @@ dialog .title {
 
 dialog[open] {
     animation: dialogFadeIn 0.25s ease-out 0s;
+    display: flex;
+    flex-direction: column;
 }
 
 dialog.fade-out {
@@ -407,6 +410,10 @@ dialog.fade-out {
     padding-left: 12px;
     padding-right: 16px;
     user-select: none;
+}
+
+.dialog-item-line {
+    border-bottom: 1px solid #80808060;
 }
 
 .dialog-section {
@@ -624,7 +631,7 @@ html::-webkit-scrollbar-track {
     }
 }
 
-@media only screen and (max-width: 384px) {
+@media only screen and (max-width: 380px) {
     #next {
         display: none;
     }
