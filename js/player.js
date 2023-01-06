@@ -63,7 +63,13 @@ function AudioPlayer() {
      * @param {Function} callback
      */
     this.load = function (path, callback) {
-        this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace("mid","mp3");
+        bufferedBar.style.display = 'block';
+        try {
+            this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace("mid","mp3");
+            this.seek(0);
+        } catch (error) {
+            console.log(error.message);
+        }
         updateBuffer(0, 1);
         fetch("api/midi" + path).then(r => {
             if (r.ok) {
@@ -138,8 +144,8 @@ function AudioPlayer() {
 
     this.stop = function () {
         this.pause();
-        this.audio.src = '';
-        updateBuffer(0, 1);
+        this.audio.removeAttribute('src');
+        bufferedBar.style.display = 'none';
     }
 
     this.isPaused = function () {
@@ -180,6 +186,15 @@ function AudioPlayer() {
 
         this.audio.addEventListener('ended', onended);
 
+        this.audio.addEventListener('error', e => {
+            if (this.audio.src != '') {
+                dialogTitle.innerText = 'Failed to play';
+                dialogContent.innerHTML = '';
+                dialogContent.appendChild(createDialogItem("The server didn't send the requested format."));
+                dialog.showModal();
+            }
+        })
+
         audioInit = true;
     }
 }
@@ -201,6 +216,7 @@ function PicoAudioPlayer() {
      * @param {Function} callback
      */
     this.load = function (path, callback) {
+        this.seek(0);
         fetch("api/midi" + path).then(r => {
             if (r.ok) {
                 r.arrayBuffer().then(data => {
@@ -213,6 +229,11 @@ function PicoAudioPlayer() {
                     }
                     callback();
                 })
+            } else {
+                dialogTitle.innerText = 'Failed to play';
+                dialogContent.innerHTML = '';
+                dialogContent.appendChild(createDialogItem("The server didn't send the requested format."));
+                dialog.showModal();
             }
         });
     }
@@ -325,11 +346,11 @@ function PicoAudioPlayer() {
     //     updatePlayback();
     // });
 
-    // picoAudio.addEventListener('songEnd', e => {
-    //     if (!picoAudio.isLoop()) this.pause();
-    //     updatePlayback();
-    //     onended();
-    // });
+    picoAudio.addEventListener('songEnd', e => {
+        if (!picoAudio.isLoop()) this.pause();
+        updatePlayback();
+        onended();
+    });
 
     setupWebMIDI();
 }
@@ -559,25 +580,29 @@ function updatePlayer(mode) {
             player.setLoop(false);
             playModeButton.innerText = '\ue00b';
             altIcon.innerText = '\ue00b';
-            altText.innerText = 'Single';
+            altText.innerHTML = '';
+            altText.appendChild(createLocaleItem('menu.play-mode.single'));
             break;
         case 1:
             player.setLoop(true);
             playModeButton.innerText = '\ue00c';
             altIcon.innerText = '\ue00c';
-            altText.innerText = 'Single Looped';
+            altText.innerHTML = '';
+            altText.appendChild(createLocaleItem('menu.play-mode.single-looped'));
             break;
         case 2:
             player.setLoop(false);
             playModeButton.innerText = '\ue00d';
             altIcon.innerText = '\ue00d';
-            altText.innerText = 'List';
+            altText.innerHTML = '';
+            altText.appendChild(createLocaleItem('menu.play-mode.list'));
             break;
         case 3:
             player.setLoop(false);
             playModeButton.innerText = '\ue00e';
             altIcon.innerText = '\ue00e';
-            altText.innerText = 'List Looped';
+            altText.innerHTML = '';
+            altText.appendChild(createLocaleItem('menu.play-mode.list-looped'));
             break;
         default:
             break;

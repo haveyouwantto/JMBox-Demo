@@ -200,21 +200,29 @@ function previous() {
 function createDialogItem(content) {
     let a = document.createElement('a');
     a.classList.add('dialog-item');
-    a.innerHTML = content;
+    if (content != null)
+        a.innerHTML = content;
     return a;
 }
 
+function createLocaleItem(key) {
+    let locale = document.createElement('locale');
+    locale.setAttribute('key', key);
+    locale.innerText = getLocale(key);
+    return locale;
+}
+
 function midiinfo(url) {
-    dialogTitle.innerText = 'MIDI Info';
+    dialogTitle.innerText = getLocale("midi-info.title");
     dialogContent.innerHTML = '';
     dialog.showModal();
     fetch("api/midiinfo" + url)
         .then(response => response.json())
         .then(data => {
-            dialogContent.appendChild(createDialogItem("Name: " + data.name));
-            dialogContent.appendChild(createDialogItem("Size: " + toSI(data.size, true) + "B"));
-            dialogContent.appendChild(createDialogItem("Last modified: " + new Date(data.lastModified).toLocaleString()));
-            dialogContent.appendChild(createDialogItem("Duration: " + formatTime(player.duration())));
+            dialogContent.appendChild(createDialogItem(getLocale("midi-info.name") + ": " + data.name));
+            dialogContent.appendChild(createDialogItem(getLocale("midi-info.size") + ": " + toSI(data.size, true) + "B"));
+            dialogContent.appendChild(createDialogItem(getLocale("midi-info.last-modified") + ": " + new Date(data.lastModified).toLocaleString()));
+            dialogContent.appendChild(createDialogItem(getLocale("midi-info.duration") + ": " + formatTime(player.duration())));
         });
 }
 
