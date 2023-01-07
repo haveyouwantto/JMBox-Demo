@@ -87,7 +87,7 @@ file-icon {
 
 
 .shadow {
-    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 40%);
+    box-shadow: 0 2px 6px 0 rgb(0 0 0 / 50%);
 }
 
 .file {
@@ -95,7 +95,7 @@ file-icon {
     padding: 5px 10px;
     display: flex;
     align-items: center;
-    min-height: 40px;    
+    min-height: 40px;
     border-bottom: 1px solid #80808060;
     cursor: pointer;
     color: var(--text-color);
@@ -118,7 +118,7 @@ body {
 
 .nav {
     background-color: var(--theme-color);
-    padding: 4px 8px 4px 8px;
+    padding: 3px 8px 3px 8px;
     font-size: 20px;
     color: white;
     position: fixed;
@@ -127,6 +127,7 @@ body {
     top: 0;
     display: flex;
     align-items: center;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
 }
 
 .headerLeft,
@@ -220,7 +221,7 @@ input[type=number] {
 input[type="number"]:focus {
     outline: none;
     border-bottom: 2px solid var(--theme-color);
-  }
+}
 
 #collapse {
     position: fixed;
@@ -383,6 +384,14 @@ dialog {
     bottom: 0;
 }
 
+dialog.shadow {
+    box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.32);
+}
+
 .dialog-container {
     display: flex;
     flex-direction: column;
@@ -397,13 +406,17 @@ dialog .title {
 }
 
 dialog[open] {
-    animation: dialogFadeIn 0.25s ease-out 0s;
+    animation: dialogFadeIn 0.2s ease-out 0s;
     display: flex;
     flex-direction: column;
 }
 
 dialog.fade-out {
-    animation: fadeOut 0.2s ease-out 0s;
+    animation: fadeOut 150ms ease-out 0s;
+}
+
+dialog.fade-out::backdrop {
+    animation: fadeOut 150ms ease-out 0s;
 }
 
 .dialog-item {
@@ -425,14 +438,13 @@ dialog.fade-out {
 .dialog-section {
     display: flex;
     flex-direction: column;
+}
+
+.dialog-subtitle {
+    color: var(--theme-color);
     padding-top: 12px;
     padding-left: 12px;
     padding-right: 16px;
-    color: var(--theme-color);
-}
-
-.dialog-section .dialog-item {
-    padding-left: 0;
 }
 
 .dialog-item:hover {
@@ -489,12 +501,12 @@ dialog.fade-out {
 }
 
 @keyframes fadeOut {
-    0% {
+    from {
         opacity: 1;
         visibility: visible;
     }
 
-    100% {
+    to {
         opacity: 0;
         visibility: hidden;
     }

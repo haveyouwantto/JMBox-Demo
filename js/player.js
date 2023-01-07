@@ -201,7 +201,7 @@ function AudioPlayer() {
 
 // singleton picoaudio
 let picoAudio = null;
-
+let picoAudioInit = false;
 function PicoAudioPlayer() {
     this.paused = true;
     this.lastPausedTime = 0;
@@ -346,11 +346,14 @@ function PicoAudioPlayer() {
     //     updatePlayback();
     // });
 
-    picoAudio.addEventListener('songEnd', e => {
-        if (!picoAudio.isLoop()) this.pause();
-        updatePlayback();
-        onended();
-    });
+    if (!picoAudioInit) {
+        picoAudio.addEventListener('songEnd', e => {
+            if (!picoAudio.isLoop()) this.pause();
+            updatePlayback();
+            onended();
+        });
+        picoAudioInit = true;
+    }
 
     setupWebMIDI();
 }
@@ -361,7 +364,6 @@ function setupWebMIDI() {
     if (config.webmidi) {
         navigator.requestMIDIAccess().then(access => {
             picoAudio.setWebMIDI(true);
-
             deviceSelection.innerHTML = '';
 
             midiDeviceList = access.outputs;
@@ -375,7 +377,11 @@ function setupWebMIDI() {
             }
         });
     } else {
+        let state = picoAudio.states.isPlaying;
+        picoAudio.pause();
         picoAudio.setWebMIDI(false);
+        if (state)
+            picoAudio.play();
     }
 }
 
@@ -630,7 +636,7 @@ function onended() {
 
 function setVolume(percentage) {
     volumeControlInner.style.width = (percentage * 100) + "%";
-    player.setVolume(percentage);
+    player.setVolume(Math.pow(percentage, 2));
     config.volume = percentage;
     save();
 }
