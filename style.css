@@ -28,9 +28,12 @@ icon {
     font-size: 26px;
     user-select: none;
     text-decoration: none;
-    width: 40px;
-    height: 40px;
     margin-right: 10px;
+}
+
+.right {
+    margin-right: 0;
+    margin-left: auto;
 }
 
 file-icon {
@@ -182,10 +185,6 @@ body {
     background-color: var(--hover-color);
 }
 
-#picoAudioMIDI {
-    display: none;
-}
-
 select {
     /* style the select element */
     display: block;
@@ -216,6 +215,7 @@ input[type=number] {
     color: var(--text-color);
     border-bottom: 1px solid #80808060;
     transition: border-bottom 0.25s;
+    width: 5rem;
 }
 
 input[type="number"]:focus {
@@ -406,17 +406,17 @@ dialog .title {
 }
 
 dialog[open] {
-    animation: dialogFadeIn 0.2s ease-out 0s;
+    animation: dialogFadeIn 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
     display: flex;
     flex-direction: column;
 }
 
 dialog.fade-out {
-    animation: fadeOut 150ms ease-out 0s;
+    animation: fadeOut 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
 }
 
 dialog.fade-out::backdrop {
-    animation: fadeOut 150ms ease-out 0s;
+    animation: fadeOut 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
 }
 
 .dialog-item {
@@ -429,6 +429,15 @@ dialog.fade-out::backdrop {
     padding-left: 12px;
     padding-right: 16px;
     user-select: none;
+}
+
+.dialog-item locale {
+    margin-right: 16px;
+}
+
+#settings-dialog .dialog-item {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .dialog-item-line {
@@ -529,7 +538,6 @@ dialog.fade-out::backdrop {
     from {
         opacity: 0;
         visibility: hidden;
-        transform: scale(0.8);
     }
 
     to {
@@ -600,6 +608,7 @@ html::-webkit-scrollbar-track {
     }
 }
 
+/* Start from this, treat as mobile phone */
 @media only screen and (max-width: 768px) {
     .file {
         width: unset;

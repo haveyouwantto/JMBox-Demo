@@ -188,9 +188,9 @@ function AudioPlayer() {
 
         this.audio.addEventListener('error', e => {
             if (this.audio.src != '') {
-                dialogTitle.innerText = 'Failed to play';
+                dialogTitle.innerText = getLocale("player.failed");
                 dialogContent.innerHTML = '';
-                dialogContent.appendChild(createDialogItem("The server didn't send the requested format."));
+                dialogContent.appendChild(createDialogItem(getLocale("player.failed.description")));
                 dialog.showModal();
             }
         })
@@ -386,7 +386,6 @@ function setupWebMIDI() {
 }
 
 if (window.isSecureContext) {
-    midiBtn.style.display = 'block';
     midiBtn.addEventListener('click', e => {
         config.webmidi = !config.webmidi;
         updateChecker(midiBtn, config.webmidi);
@@ -394,25 +393,10 @@ if (window.isSecureContext) {
         save();
     });
 } else {
+    midiBtn.style.display = 'none';
     $("#picoaudio-section").style.display = "none";
 }
 updateChecker(midiBtn, config.webmidi);
-
-/**
- * Update a checker
- * @param {HTMLElement} parent 
- * @param {boolean} value 
- */
-function updateChecker(parent, value) {
-    let checker = parent.querySelector('icon');
-    if (value) {
-        checker.classList.add('icon-checked');
-        checker.innerText = '\ue013';
-    } else {
-        checker.classList.remove('icon-checked');
-        checker.innerText = '\ue012';
-    }
-}
 
 // audio midi src toggle
 midiSrcBtn.addEventListener('click', e => {
@@ -523,20 +507,35 @@ midiInfo.addEventListener('click', e => {
 
 function createPlayer(playerClass) {
     let playtime = player.currentTime();
-    let paused = player.isPaused();
+    let lastPaused = player.isPaused();
     let volume = player.getVolume();
     player.stop();
     player = new playerClass();
     player.setVolume(volume);
     updatePlayer(config.playMode);
+    updatePlayerChecker(playerClass);
+
     if (filesMem.length > 0) {
         player.load(cdMem + "/" + filesMem[playing], () => {
             player.seek(playtime);
-            if (!paused) player.play();
+            if (!lastPaused) player.play();
         });
     }
     config.player = player.constructor.name;
     save();
+}
+
+function updatePlayerChecker(player) {
+    switch (player) {
+        case AudioPlayer:
+            updateChecker(audioPlayer, true);
+            updateChecker(picoAudioPlayer, false);
+            break;
+        case PicoAudioPlayer:
+            updateChecker(audioPlayer, false);
+            updateChecker(picoAudioPlayer, true);
+            break;
+    }
 }
 
 audioPlayer.addEventListener('click', e => {

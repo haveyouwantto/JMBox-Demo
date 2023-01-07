@@ -1,7 +1,7 @@
-function $(e) {
+function $(e, parent = document) {
     if (e instanceof HTMLElement) return e;
     if (e.startsWith("#")) return document.getElementById(e.slice(1));
-    let l = document.querySelectorAll(e);
+    let l = parent.querySelectorAll(e);
     if (l.length == 1) return l[0];
     else return l;
 }
@@ -49,4 +49,23 @@ function toSI(n, bin = false) {
         n /= base;
     }
     return (n * base).toLocaleString() + " " + suffix[suffix.length - 1];
+}
+
+
+/**
+ * Update a checker
+ * @param {HTMLElement} parent 
+ * @param {boolean} value 
+ */
+function updateChecker(parent, value) {
+    let checker = $('icon[checker]', parent);
+    let isRadio = checker.classList.contains("radio");
+    
+    if (value) {
+        checker.classList.add('icon-checked');
+        checker.innerText = isRadio ? '\ue01c' : '\ue013';
+    } else {
+        checker.classList.remove('icon-checked');
+        checker.innerText = isRadio ? '\ue01b' : '\ue012';
+    }
 }
