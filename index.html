@@ -22,31 +22,34 @@
 
         <!-- Left -->
         <div class="headerLeft">
-            <a id="back" class="icon menu-button round hidden">&#57347; </a>
-            <a id="home" class="icon menu-button round hidden">&#57348;</a>
+            <button id="back" class="icon menu-button round hidden">&#57347; </button>
+            <button id="home" class="icon menu-button round hidden">&#57348;</button>
             <div id="title">JMBox</div>
         </div>
 
         <!-- Right -->
         <div class="headerRight">
-            <a id="menu" class="icon menu-button round">&#57349;</a>
-            <div class="menu shadow">
-                <a id="refresh" class="menu-item">
-                    <icon>&#57360;</icon><locale key="menu.refresh">Refresh</locale>
-                </a>
-
-                <a id="open-settings-button" class="menu-item">
-                    <icon>&#57367;</icon><locale key="menu.settings">Settings</locale>
-                </a>
-                <a id="about-button" class="menu-item">
-                    <icon>&#57352;</icon><locale key="menu.about">About</locale>
-                </a>
-                <a id="language-button" class="menu-item">
-                    <icon>&#57369;</icon><locale key="menu.languages">Languages</locale>
-                </a>
-            </div>
+            <button id="menu" class="icon menu-button round">&#57349;</button>
         </div>
 
+    </div>
+
+    <!-- Top Menu -->
+
+    <div class="menu shadow no-select" id="topMenu">
+        <button id="refresh" class="menu-item button-flash">
+            <icon>&#57360;</icon><locale key="menu.refresh">Refresh</locale>
+        </button>
+
+        <button id="open-settings-button" class="menu-item button-flash">
+            <icon>&#57367;</icon><locale key="menu.settings">Settings</locale>
+        </button>
+        <button id="about-button" class="menu-item button-flash">
+            <icon>&#57352;</icon><locale key="menu.about">About</locale>
+        </button>
+        <button id="language-button" class="menu-item button-flash">
+            <icon>&#57369;</icon><locale key="menu.languages">Languages</locale>
+        </button>
     </div>
 
     <!-- Player control -->
@@ -56,13 +59,13 @@
             <div id="playtime" class="slider-inner"></div>
         </div>
         <div id="controls">
-            <div id="controlsLeft" class="bottom-button">
+            <button id="controlsLeft" class="bottom-button">
                 <div id="songTitle"></div>
-            </div>
+            </button>
             <div id="controlsMiddle">
-                <a id="prev" class="icon round bottom-button controls">&#57346;</a>
-                <a id="play" class="icon round bottom-button controls">&#57344;</a>
-                <a id="next" class="icon round bottom-button controls">&#57345;</a>
+                <button id="prev" class="icon round bottom-button controls">&#57346;</button>
+                <button id="play" class="icon round bottom-button controls">&#57344;</button>
+                <button id="next" class="icon round bottom-button controls">&#57345;</button>
                 <div id="time">
                     <div id="timeDisplay">00:00</div>
                     <div class="seperater">/</div>
@@ -74,33 +77,35 @@
                 <div id="volume" class="slider">
                     <div id="volume-inner" class="slider-inner"></div>
                 </div>
-                <a id="playMode" class="icon round bottom-button controls">&#11122;</a>
-                <a id="bottomMenu" class="icon round bottom-button">&#57349;</a>
-                <div class="bottom-menu shadow">
-                    <a id="locate" class="menu-item">
-                        <icon>&#57351;</icon><locale key="menu.locate">Locate File</locale>
-                    </a>
-                    <a id="midiInfo" class="menu-item">
-                        <icon>&#57352;</icon><locale key="menu.midi-info">MIDI Info</locale>
-                    </a>
-                    <a id="wav" class="menu-item">
-                        <icon>&#57353;</icon><locale key="menu.audio-file">Audio File</locale>
-                    </a>
-                    <a id="mid" class="menu-item">
-                        <icon>&#57354;</icon><locale key="menu.midi-file">MIDI File</locale>
-                    </a>
-                    <a id="playModeAlt" class="menu-item">
-                        <icon>&#57355;</icon>
-                        <div style="display: inline;"><locale key="menu.play-mode">Single</locale></div>
-                    </a>
-                    <a id="replay" class="menu-item">
-                        <icon>&#57360;</icon><locale key="menu.replay">Replay</locale>
-                    </a>
-                </div>
+                <button id="playMode" class="icon round bottom-button controls">&#11122;</button>
+                <button id="bottomMenuBtn" class="icon round bottom-button">&#57349;</button>
             </div>
         </div>
         <audio autoplay id="audio"></audio>
         <!--<a id="loop" class="icon button shadow colored">&#11119;</a>-->
+    </div>
+
+    <!-- Bottom Menu -->
+    <div class="bottom-menu shadow no-select" id="bottomMenu">
+        <a id="wav" class="menu-item button-flash">
+            <icon>&#57353;</icon><locale key="menu.audio-file">Audio File</locale>
+        </a>
+        <a id="mid" class="menu-item button-flash">
+            <icon>&#57354;</icon><locale key="menu.midi-file">MIDI File</locale>
+        </a>
+        <button id="locate" class="menu-item button-flash">
+            <icon>&#57351;</icon><locale key="menu.locate">Locate File</locale>
+        </button>
+        <button id="midiInfo" class="menu-item button-flash">
+            <icon>&#57352;</icon><locale key="menu.midi-info">MIDI Info</locale>
+        </button>
+        <button id="playModeAlt" class="menu-item button-flash">
+            <icon>&#57355;</icon>
+            <locale key="menu.play-mode">Single</locale>
+        </button>
+        <button id="replay" class="menu-item button-flash">
+            <icon>&#57360;</icon><locale key="menu.replay">Replay</locale>
+        </button>
     </div>
 
     <!-- Waterfall -->
@@ -111,36 +116,37 @@
     <!-- Files -->
     <div id="content"></div>
 
-    <!-- Dialog -->
+
+    <!-- Settings -->
     <dialog id="settings-dialog" class="shadow">
         <div class="title"><locale key="settings.title">Settings</locale></div>
 
         <div class="dialog-container">
             <section class="dialog-section" id="general-section"><locale class="dialog-subtitle" key="settings.general">General</locale>
-                <a id="dark" class="dialog-item">
+                <button id="dark" class="dialog-item button-flash">
                     <icon>&#57350;</icon><locale key="settings.general.dark-mode">Dark Mode</locale><icon class="right" checker>&#57362;</icon>
-                </a>
+                </button>
             </section>
 
             <section class="dialog-section" id="player-section"><locale class="dialog-subtitle" key="settings.players">Players</locale>
-                <a id="audioPlayer" class="dialog-item">
+                <button id="audioPlayer" class="dialog-item button-flash">
                     <icon>&#57361;</icon><locale key="settings.players.audio">Use Audio Player</locale><icon class="right radio" checker>&#57362;</icon>
-                </a>
-                <a id="picoAudioPlayer" class="dialog-item">
+                </button>
+                <button id="picoAudioPlayer" class="dialog-item button-flash">
                     <icon>&#57364;</icon><locale key="settings.players.picoaudio">Use PicoAudio Synthesizer</locale><icon class="right radio" checker>&#57362;</icon>
-                </a>
+                </button>
             </section>
 
             <section class="dialog-section" id="audio-section"><locale class="dialog-subtitle" key="settings.audio">Audio Player</locale>
-                <a id="midiSrc" class="dialog-item">
+                <button id="midiSrc" class="dialog-item button-flash">
                     <icon>&#57354;</icon><locale key="settings.audio.midi-src">Use MIDI as source</locale><icon class="right" checker>&#57362;</icon>
-                </a>
+                </button>
             </section>
 
             <section class="dialog-section" id="picoaudio-section"><locale class="dialog-subtitle" key="settings.picoaudio">PicoAudio</locale>
-                <a id="picoAudioMIDI" class="dialog-item">
+                <button id="picoAudioMIDI" class="dialog-item button-flash">
                     <icon>&#57370;</icon><locale key="settings.picoaudio.web-midi">Use Web MIDI Output</locale><icon class="right" checker>&#57362;</icon>
-                </a>
+                </button>
                 <a id="picoAudioMIDIDevice" class="dialog-item">
                     <icon>&#57368;</icon><locale key="settings.picoaudio.midi-devices">MIDI Devices</locale><select id="devices" class="right"></select>
                 </a>
@@ -155,10 +161,14 @@
                     <icon>&#57367;</icon><locale key="settings.piano-roll.max-note-duration">Max Note Duration</locale>
                     <input class="right" id="maxNoteDuration" type="number" min="1" max="60" step="1" value="30"></input>
                 </a>
+                <button id="noteTransparency" class="dialog-item button-flash">
+                    <icon>&#57367;</icon><locale key="settings.piano-roll.note-transparency">Note translucence to velocity</locale>
+                    <icon class="right" checker>&#57362;</icon>
+                </button>
             </section>
         </div>
         <div class="dialog-button-container">
-            <a class="dialog-button" id="close-settings-button"><locale key="settings.close-btn">Close</locale></a>
+            <button class="dialog-button" id="close-settings-button"><locale key="settings.close-btn">Close</locale></button>
         </div>
 
     </dialog>
@@ -166,13 +176,13 @@
         <div class="title">Dialog</div>
         <div class="dialog-container"></div>
         <div class="dialog-button-container">
-            <a class="dialog-button" id="close-dialog-button"><locale key="dialog.close-btn">Close</locale></a>
+            <button class="dialog-button" id="close-dialog-button"><locale key="dialog.close-btn">Close</locale></button>
         </div>
     </dialog>
 
 
     <script>
-        const version = "Alpha 1.2.1";
+        const version = "Alpha 1.3";
     </script>
     <script src="js/utils.js"></script>
     <script src="js/config.js"></script>

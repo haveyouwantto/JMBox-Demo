@@ -5,6 +5,34 @@
     --bg-color-alt: white;
     --hover-color: #00000020;
     --bar-color: #e0e0e0;
+
+    --theme-color-80: #00796b80;
+    --theme-color-60: #00796b60;
+    --theme-color-50: #00796b50;
+    --theme-color-40: #00796b40;
+    --theme-color-20: #00796b20;
+
+    overflow-x: hidden;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    font: unset;
+    text-align: unset;
+    cursor: pointer;
+}
+
+button:focus-visible {
+    outline: 2px solid var(--theme-color);
+}
+
+::selection {
+    background-color: var(--theme-color-80);
 }
 
 .icon {
@@ -15,7 +43,6 @@
     height: 40px;
     text-align: center;
     margin: 5px;
-    user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -62,14 +89,13 @@ file-icon {
     flex-direction: column;
     align-items: center;
     margin-bottom: 65px;
-    margin-top: 58px;
+    margin-top: 56px;
 }
 
 .menu-button {
     transition: background-color 0.15s;
     border: none;
     color: white;
-    cursor: pointer;
     border-radius: 4px;
     display: flex;
     justify-content: center;
@@ -98,15 +124,16 @@ file-icon {
     padding: 5px 10px;
     display: flex;
     align-items: center;
-    min-height: 40px;
-    border-bottom: 1px solid #80808060;
-    cursor: pointer;
+    min-height: 50px;
+    border-bottom: 1px solid var(--hover-color);
     color: var(--text-color);
     transition: background-color 0.15s;
+
+    -webkit-tap-highlight-color: var(--theme-color-80);
 }
 
 .file:hover {
-    background-color: var(--hover-color);
+    background-color: var(--theme-color-20);
 }
 
 .file-locate {
@@ -131,6 +158,10 @@ body {
     display: flex;
     align-items: center;
     box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+}
+
+.nav button:focus-visible {
+    outline-color: white;
 }
 
 .headerLeft,
@@ -165,20 +196,18 @@ body {
     flex-direction: column;
     visibility: hidden;
     overflow: hidden auto;
-    max-height: 50vh;
-    z-index: 6;
+    max-height: 70%;
+    z-index: 7;
 }
 
 .menu-item {
     text-decoration: none;
     color: var(--text-color);
     transition: background-color 0.15s;
-    cursor: pointer;
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
     padding-right: 16px;
-    user-select: none;
 }
 
 .menu-item:hover {
@@ -193,14 +222,15 @@ select {
     font-size: 1rem;
     color: var(--text-color);
     background-color: #00000000;
+    min-width: 5rem;
+    outline: 1px solid var(--hover-color);
+    transition: outline 0.2s;
+    padding: 3px;
+    border-radius: 3px;
 }
 
 select:focus {
     outline: 2px solid var(--theme-color);
-}
-
-dialog select {
-    margin-left: 36px;
 }
 
 select option {
@@ -213,9 +243,9 @@ input[type=number] {
     background-color: #0000;
     font-size: 1rem;
     color: var(--text-color);
-    border-bottom: 1px solid #80808060;
-    transition: border-bottom 0.25s;
-    width: 5rem;
+    border-bottom: 1px solid var(--hover-color);
+    transition: border-bottom 0.2s;
+    min-width: 5rem;
 }
 
 input[type="number"]:focus {
@@ -228,6 +258,7 @@ input[type="number"]:focus {
     width: 100vw;
     height: 100vh;
     top: 0;
+    z-index: 6;
 }
 
 /* Player Bar */
@@ -250,7 +281,7 @@ input[type="number"]:focus {
 
 #progress #bufferedtime {
     width: 0;
-    background-color: #80808060;
+    background-color: var(--theme-color-50);
     height: 100%;
     position: absolute;
     transition: width 0.2s;
@@ -321,11 +352,10 @@ input[type="number"]:focus {
 
 .bottom-button {
     transition: background-color 0.15s;
-    cursor: pointer;
 }
 
 .bottom-button:hover {
-    background-color: var(--hover-color);
+    background-color: var(--theme-color-20);
 }
 
 .controls {
@@ -344,13 +374,6 @@ input[type="number"]:focus {
     margin-left: 5px;
 }
 
-
-#bottomMenu {
-    z-index: 6;
-    cursor: pointer;
-    color: var(--text-color);
-}
-
 .bottom-menu {
     position: fixed;
     bottom: 50px;
@@ -363,7 +386,13 @@ input[type="number"]:focus {
     flex-direction: column;
     visibility: hidden;
     overflow: hidden auto;
-    max-height: 50vh;
+    max-height: 70%;
+    z-index: 7;
+    color: var(--text-color);
+}
+
+#bottomMenuBtn:hover {
+    color: var(--theme-color);
 }
 
 /* Dialog */
@@ -371,7 +400,7 @@ dialog {
     background-color: var(--bg-color-alt);
     border: none;
     border-radius: 4px;
-    max-height: 70%;
+    max-height: 90%;
     max-width: 500px;
     min-width: 200px;
     font-family: sans-serif;
@@ -423,12 +452,10 @@ dialog.fade-out::backdrop {
     text-decoration: none;
     color: var(--text-color);
     transition: background-color 0.15s;
-    cursor: pointer;
     padding-top: 8px;
     padding-bottom: 8px;
-    padding-left: 12px;
+    padding-left: 16px;
     padding-right: 16px;
-    user-select: none;
 }
 
 .dialog-item locale {
@@ -437,11 +464,11 @@ dialog.fade-out::backdrop {
 
 #settings-dialog .dialog-item {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
 }
 
 .dialog-item-line {
-    border-bottom: 1px solid #80808060;
+    border-bottom: 1px solid var(--hover-color);
 }
 
 .dialog-section {
@@ -452,12 +479,22 @@ dialog.fade-out::backdrop {
 .dialog-subtitle {
     color: var(--theme-color);
     padding-top: 12px;
-    padding-left: 12px;
+    padding-left: 16px;
     padding-right: 16px;
 }
 
-.dialog-item:hover {
+/* Ripple effect */
+.button-flash {
+    background-position: center;
+}
+
+.button-flash:hover {
     background-color: var(--hover-color);
+}
+
+.button-flash:active {
+    background-color: var(--theme-color-60);
+    transition: background-color 0s;
 }
 
 .dialog-button {
@@ -468,14 +505,12 @@ dialog.fade-out::backdrop {
     padding: 8px;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.15s;
-    user-select: none;
 }
 
 .dialog-button:hover {
-    background-color: var(--hover-color);
+    background-color: var(--theme-color-20);
 }
 
 .dialog-button-container {
@@ -558,6 +593,20 @@ dialog.fade-out::backdrop {
     }
 }
 
+@keyframes ripple {
+    0% {
+        background: transparent;
+        background-size: 100%;
+    }
+
+    50%{
+        background: radial-gradient(circle, var(--hover-color) 1%, transparent 1%) center/15000%;
+    }
+    100%{
+        background: transparent;
+    }
+}
+
 .menu-hidden {
     animation: fadeOut 0.2s ease-out 0s;
     visibility: hidden;
@@ -596,6 +645,18 @@ html::-webkit-scrollbar-track {
     background: var(--bar-color);
 }
 
+.line-seperater {
+    margin: 0;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--hover-color);
+}
+
+.line-seperater-margin {
+    margin-top: 3.7px;
+    margin-bottom: 3.7px;
+}
+
 @font-face {
     font-family: icon;
     src: url('icon.woff2');
@@ -625,6 +686,17 @@ html::-webkit-scrollbar-track {
         align-items: stretch;
     }
 
+    dialog[open] {
+        animation-duration: 250ms;
+    }
+
+    dialog.fade-out {
+        animation-duration: 200ms;
+    }
+
+    dialog.fade-out::backdrop {
+        animation-duration: 200ms;
+    }
 }
 
 @media only screen and (max-width: 680px) {
@@ -666,4 +738,58 @@ html::-webkit-scrollbar-track {
     dialog {
         min-width: 80%;
     }
+
+    .dialog-item {
+        overflow-wrap: anywhere;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    input[type=number] {
+        min-width: unset;
+    }
+
+    select {
+        min-width: unset;
+    }
+
+    .right {
+        max-width: 40vw;
+    }
+
+    .dialog-item locale {
+        margin-right: unset;
+    }
+
+    dialog {
+        max-height: 100%;
+    }
+}
+
+@media only screen and (max-height:400px) {
+
+    #controlsLeft,
+    #controlsMiddle,
+    #controlsRight {
+        height: 48px;
+    }
+
+    #bar {
+        height: 56px;
+    }
+
+    #waterfall {
+        height: calc(100% - 56px);
+    }
+
+    .nav {
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 16px;
+    }
+
+    #content {
+        margin-top: 50px;
+    }
+
 }

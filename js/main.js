@@ -47,14 +47,17 @@ function info() {
         }
 
         document.documentElement.style.setProperty('--theme-color', result.themeColor);
+        document.documentElement.style.setProperty('--theme-color-80', result.themeColor + "80");
+        document.documentElement.style.setProperty('--theme-color-60', result.themeColor + "60");
+        document.documentElement.style.setProperty('--theme-color-50', result.themeColor + "50");
+        document.documentElement.style.setProperty('--theme-color-40', result.themeColor + "40");
+        document.documentElement.style.setProperty('--theme-color-20', result.themeColor + "20");
         metaThemeColor.content = result.themeColor;
     });
 }
 
 /** 
  * Listing a directory
- * @param {string} dir The absolute path of directory to enter
- * @param add Add this directory to stack
  */
 function list(ignoreCache = false) {
     let path = pathman.getPath();
@@ -72,7 +75,13 @@ function list(ignoreCache = false) {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    alert(response.status + ": " + response.statusText);
+                    dialogTitle.innerHTML = '';
+                    dialogTitle.appendChild(createLocaleItem('general.error'));
+                    dialogContent.innerHTML = '';
+                    let item = createDialogItem();
+                    item.appendChild(createLocaleItem('browser.not-found'))
+                    dialogContent.appendChild(item);
+                    dialog.showModal();
                 }
             })
             .then(result => {
@@ -101,7 +110,7 @@ async function updateList(path, result) {
     files = [];
 
     for (let element of result) {
-        let file = document.createElement("div");
+        let file = document.createElement("button");
         file.setAttribute("class", "file");
         file.setAttribute("value", element.name);
 
@@ -160,7 +169,7 @@ function play(dir, file) {
     let url = dir + "/" + encodeURIComponent(file);
 
     document.title = serverName + " - " + file;
-    wav.setAttribute("href", "api/play" + url.replace("mid","mp3"));
+    wav.setAttribute("href", "api/play" + url.replace('mid','mp3'));
     mid.setAttribute("href", "api/midi" + url);
     midiInfo.setAttribute("value", url);
     songTitle.innerText = file;
@@ -198,8 +207,14 @@ function previous() {
     play(cdMem, filesMem[playing]);
 }
 
-function createDialogItem(content) {
-    let a = document.createElement('a');
+/**
+ * 
+ * @param {string} content 
+ * @param {boolean} button default false
+ * @returns 
+ */
+function createDialogItem(content, button = false) {
+    let a = document.createElement(button ? 'button' : 'a');
     a.classList.add('dialog-item');
     if (content != null)
         a.innerHTML = content;

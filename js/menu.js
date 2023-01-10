@@ -7,7 +7,7 @@ let backBtn = head.querySelector("#back");
 let homeBtn = head.querySelector("#home");
 let menuBtn = head.querySelector("#menu");
 
-let menu = head.querySelector(".menu");
+let menu = $("#topMenu");
 let collapse = $("#collapse");
 
 // Menu Items
@@ -174,7 +174,7 @@ aboutButton.addEventListener('click', e => {
     dialogContent.innerHTML = '';
     dialogContent.appendChild(createDialogItem('<a href="https://github.com/haveyouwantto/JMBox" class="link">JMBox</a> ' + getLocale("about.name")));
     dialogContent.appendChild(createDialogItem(getLocale("about.version") + " " + version));
-    dialogContent.appendChild(createDialogItem("\u00a9 2022 haveyouwantto"));
+    dialogContent.appendChild(createDialogItem("\u00a9 2023 haveyouwantto"));
     dialogContent.appendChild(createDialogItem("Licensed under MIT License."));
 
     let section = document.createElement("a");
@@ -192,7 +192,8 @@ languageButton.addEventListener('click', e => {
     dialogTitle.appendChild(createLocaleItem('languages.title'));
     dialogContent.innerHTML = '';
 
-    let item = createDialogItem();
+    let item = createDialogItem(null, true);
+    item.classList.add('button-flash');
     item.appendChild(createLocaleItem('languages.auto'));
     item.addEventListener('click', e => {
         setLocale(navigator.language);
@@ -202,7 +203,8 @@ languageButton.addEventListener('click', e => {
     dialogContent.appendChild(item);
 
     for (let language in localeList) {
-        let item = createDialogItem(localeList[language]);
+        let item = createDialogItem(localeList[language], true);
+        item.classList.add('button-flash');
         item.addEventListener('click', e => {
             setLocale(language);
             config.language = language;

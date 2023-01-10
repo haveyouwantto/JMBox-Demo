@@ -23,7 +23,7 @@ let volumeControlInner = $("#volume-inner");
 
 let playModeAltButton = $("#playModeAlt");
 let altIcon = playModeAltButton.querySelector('icon');
-let altText = playModeAltButton.querySelector('div');
+let altText = playModeAltButton.querySelector('locale');
 
 let midiInfo = $("#midiInfo");
 
@@ -65,7 +65,7 @@ function AudioPlayer() {
     this.load = function (path, callback) {
         bufferedBar.style.display = 'block';
         try {
-            this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace("mid","mp3");
+            this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace('mid','mp3');
             this.seek(0);
         } catch (error) {
             console.log(error.message);
@@ -144,7 +144,7 @@ function AudioPlayer() {
 
     this.stop = function () {
         this.pause();
-        this.audio.removeAttribute('src');
+        this.audio.src = "null:"
         bufferedBar.style.display = 'none';
     }
 
@@ -162,6 +162,11 @@ function AudioPlayer() {
 
     this.setVolume = function (volume) {
         this.audio.volume = volume;
+    }
+
+    this.replay = function () {
+        this.seek(0);
+        this.play();
     }
 
     if (!audioInit) {
@@ -187,7 +192,7 @@ function AudioPlayer() {
         this.audio.addEventListener('ended', onended);
 
         this.audio.addEventListener('error', e => {
-            if (this.audio.src != '') {
+            if (this.audio.src != 'null:') {
                 dialogTitle.innerText = getLocale("player.failed");
                 dialogContent.innerHTML = '';
                 dialogContent.appendChild(createDialogItem(getLocale("player.failed.description")));
@@ -224,6 +229,9 @@ function PicoAudioPlayer() {
                     smfData = parsedData;
                     try {
                         picoAudio.setData(parsedData);
+                        if (config.webmidi) {
+                            resetMIDI(picoAudio.settings.WebMIDIPortOutput);
+                        }
                     } catch (error) {
                         console.warn(error);
                     }
@@ -334,6 +342,11 @@ function PicoAudioPlayer() {
         picoAudio.setMasterVolume(volume);
     }
 
+    this.replay = function () {
+        this.seek(0);
+        this.play();
+    }
+
     // picoAudio.addEventListener('noteOn', e => {
     //     updatePlayback();
     // });
@@ -362,7 +375,8 @@ function PicoAudioPlayer() {
 // PicoAudio MIDI initialize
 function setupWebMIDI() {
     if (config.webmidi) {
-        navigator.requestMIDIAccess().then(access => {
+        navigator.requestMIDIAccess({ sysex: true }).then(access => {
+
             picoAudio.setWebMIDI(true);
             deviceSelection.innerHTML = '';
 
@@ -382,6 +396,42 @@ function setupWebMIDI() {
         picoAudio.setWebMIDI(false);
         if (state)
             picoAudio.play();
+    }
+}
+
+function resetMIDI(output, mute = false) {
+    if (output != null) {
+        for (let i = 0; i < 16; i++) {
+            if (mute)
+                output.send([0xB0 | i, 0x7A, 0x00]);  // All Notes Off
+
+            // 发送 "All Controllers Off" 事件
+            output.send([0xB0 | i, 0x7B, 0x00]);  // All Controllers Off
+
+            // 发送额外的重置控制器事件
+            output.send([0xB0 | i, 0x01, 0x00]);  // Modulation Wheel
+            output.send([0xB0 | i, 0x0B, 0x7F]);  // Expression
+            output.send([0xB0 | i, 0x40, 0x00]);  // Hold Pedal
+            output.send([0xB0 | i, 0x41, 0x00]);  // Portamento
+            output.send([0xB0 | i, 0x42, 0x00]);  // Sustenuto
+            output.send([0xB0 | i, 0x43, 0x00]);  // Soft
+            output.send([0xB0 | i, 0x44, 0x00]);  // Legato
+            output.send([0xB0 | i, 0x45, 0x00]);  // Hold 2
+            output.send([0xB0 | i, 0x07, 0x64]);  // Volume
+            output.send([0xB0 | i, 0x0A, 0x40]);  // Pan
+            output.send([0xB0 | i, 0x65, 0x00]);  // Non-Registered Parameter (coarse)
+            output.send([0xB0 | i, 0x64, 0x00]);  // Non-Registered Parameter (fine)
+            output.send([0xB0 | i, 0x06, 0x02]);  // Registered Parameter (coarse)
+            output.send([0xB0 | i, 0x26, 0x01]);  // Registered Parameter (fine)
+            output.send([0xB0 | i, 0x5B, 0x28]);  // Reverb
+            output.send([0xB0 | i, 0x5D, 0x00]);  // Chorus
+
+            // 发送 "Pitch Wheel" 和 "Channel Pressure" 事件
+            output.send([0xE0 | i, 0x40, 0x40]);  // Pitch Wheel
+            output.send([0xD0 | i, 0x00]);        // Channel Pressure
+
+            output.send([0xC0 | i, 0x00]);  // Program Change
+        }
     }
 }
 
@@ -438,6 +488,7 @@ function togglePause() {
 playButton.addEventListener('click', togglePause);
 document.addEventListener("keypress", function (event) {
     if (event.key === " ") {
+        event.preventDefault();
         togglePause();
     }
 });
@@ -451,12 +502,11 @@ prevButton.addEventListener('click', e => {
 });
 
 replayButton.addEventListener('click', e => {
-    player.seek(0);
-    player.play();
+    player.replay();
 });
 
 // Bottom Menu
-let bottomMenuBtn = $("#bottomMenu");
+let bottomMenuBtn = $("#bottomMenuBtn");
 let bottomMenu = $(".bottom-menu");
 
 // menu display style changer
@@ -548,7 +598,7 @@ picoAudioPlayer.addEventListener('click', e => {
 
 // Locate the file
 function highlight(name) {
-    let element = $("div[value=\"" + name + "\"]");
+    let element = $(".file[value=\"" + name + "\"]");
     element.classList.remove('file-locate');
     element.scrollIntoView({ block: "center" });
     element.classList.add('file-locate');
@@ -652,5 +702,10 @@ volumeControl.addEventListener('click', e => {
 
 let deviceSelection = $("#devices");
 deviceSelection.addEventListener('change', e => {
-    picoAudio.settings.WebMIDIPortOutput = midiDeviceList.get(deviceSelection.value);
+    console.log(deviceSelection.value);
+    
+    resetMIDI(picoAudio.settings.WebMIDIPortOutput, true);  // reset previous device
+    let device = midiDeviceList.get(deviceSelection.value);
+    resetMIDI(device, true);  // reset current device
+    picoAudio.settings.WebMIDIPortOutput = device;
 });
