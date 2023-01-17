@@ -6,11 +6,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta name="theme-color" id="meta-theme-color" content="#00796b" />
+    <meta name="description" content="JMBox MIDI Player">
 
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="waterfall.css" />
 
     <link rel="icon" href="favicon.ico" />
+    <link rel="manifest" href="manifest.json">
+    
 </head>
 
 <body>
@@ -130,14 +133,14 @@
 
             <section class="dialog-section" id="player-section"><locale class="dialog-subtitle" key="settings.players">Players</locale>
                 <button id="audioPlayer" class="dialog-item button-flash">
-                    <icon>&#57361;</icon><locale key="settings.players.audio">Use Audio Player</locale><icon class="right radio" checker>&#57362;</icon>
+                    <icon>&#57361;</icon><locale key="settings.players.audio">Sampled Audio</locale><icon class="right radio" checker>&#57362;</icon>
                 </button>
                 <button id="picoAudioPlayer" class="dialog-item button-flash">
                     <icon>&#57364;</icon><locale key="settings.players.picoaudio">Use PicoAudio Synthesizer</locale><icon class="right radio" checker>&#57362;</icon>
                 </button>
             </section>
 
-            <section class="dialog-section" id="audio-section"><locale class="dialog-subtitle" key="settings.audio">Audio Player</locale>
+            <section class="dialog-section" id="audio-section"><locale class="dialog-subtitle" key="settings.audio">Sampled Audio</locale>
                 <button id="midiSrc" class="dialog-item button-flash">
                     <icon>&#57354;</icon><locale key="settings.audio.midi-src">Use MIDI as source</locale><icon class="right" checker>&#57362;</icon>
                 </button>
@@ -165,6 +168,10 @@
                     <icon>&#57367;</icon><locale key="settings.piano-roll.note-transparency">Note translucence to velocity</locale>
                     <icon class="right" checker>&#57362;</icon>
                 </button>
+                <button id="highlightNotes" class="dialog-item button-flash">
+                    <icon>&#57367;</icon><locale key="settings.piano-roll.highlight-playing-notes">Highlight playing notes</locale>
+                    <icon class="right" checker>&#57362;</icon>
+                </button>
             </section>
         </div>
         <div class="dialog-button-container">
@@ -182,7 +189,7 @@
 
 
     <script>
-        const version = "Alpha 1.3";
+        const version = "Alpha 1.3.3";
     </script>
     <script src="js/utils.js"></script>
     <script src="js/config.js"></script>

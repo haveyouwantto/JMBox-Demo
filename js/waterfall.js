@@ -33,13 +33,26 @@ let wakeLockSupported = 'wakeLock' in navigator;
 // Create a reference for the Wake Lock.
 let wakeLock = null;
 
+let animationId = null;
+
+function startAnimation() {
+    if (animationId == null && waterfall.classList.contains('open')) animationId = requestAnimationFrame(draw);
+}
+
+function endAnimation() {
+    if (animationId != null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+}
 
 // Entrance to waterfall
 controlsLeft.addEventListener('click', e => {
-    if (smfData != null && waterfall.classList.contains('hidden')) {
+    if (waterfall.classList.contains('hidden')) {
         waterfall.classList.remove('hidden');
         waterfall.classList.add('open');
-        requestAnimationFrame(draw);
+
+        startAnimation();
         if (wakeLockSupported) {
             try {
                 navigator.wakeLock.request('screen').then(lock => {
@@ -53,9 +66,10 @@ controlsLeft.addEventListener('click', e => {
             }
         }
     } else {
+        endAnimation();
         waterfall.classList.add('hidden');
         waterfall.classList.remove('open');
-        if (wakeLockSupported) {
+        if (wakeLockSupported && wakeLock != null) {
             wakeLock.release()
                 .then(() => {
                     wakeLock = null;
@@ -150,37 +164,44 @@ function fastSpan(list, startTime, duration) {
 }
 
 function draw() {
-    if (smfData != null && !waterfall.classList.contains('hidden')) {
+    if (!waterfall.classList.contains('hidden')) {
         canvasCtx.fillStyle = fillColor;
         canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
         let playTime = player.currentTime();
 
         let scaling = canvas.height / config.spanDuration;
 
-        for (let i = 0; i < 16; i++) {
-            canvasCtx.fillStyle = palette[i];
-            for (let note of fastSpan(smfData.channels[i].notes, playTime, config.spanDuration)) {
-                let stopTime = getStopTime(note);
-                let startY = (note.startTime - playTime) * scaling;
-                let endY = (stopTime - playTime) * scaling;
-                let x = note.pitch * noteWidth;
+        if (smfData != null) {
+            for (let i = 0; i < 16; i++) {
+                canvasCtx.fillStyle = palette[i];
+                for (let note of fastSpan(smfData.channels[i].notes, playTime, config.spanDuration)) {
+                    let stopTime = getStopTime(note);
+                    let startY = (note.startTime - playTime) * scaling;
+                    let endY = (stopTime - playTime) * scaling;
+                    let x = note.pitch * noteWidth;
 
-                if (config.noteTransparency) {
-                    canvasCtx.fillStyle = palette[i] + getNoteTransparency(note.velocity);
-                }
-                canvasCtx.fillRect(x, canvas.height - endY - keyboardHeight, noteWidth, endY - startY);
+                    if (config.noteTransparency) {
+                        canvasCtx.fillStyle = palette[i] + getNoteTransparency(note.velocity);
+                    }
+                    canvasCtx.fillRect(x, canvas.height - endY - keyboardHeight, noteWidth, endY - startY);
 
-                // Pressed key
-                if (note.startTime < playTime) {
-                    notes[note.pitch] = i;
+                    // Pressed key
+                    if (note.startTime < playTime) {
+                        notes[note.pitch] = i;
+                        if(config.highlightNotes){
+                            canvasCtx.fillStyle = "#ffffff60";
+                            canvasCtx.fillRect(x, canvas.height - endY - keyboardHeight, noteWidth, endY - startY);
+                            canvasCtx.fillStyle = palette[i];
+                        }
+                    }
                 }
             }
         }
 
         // Draw white keys
         canvasCtx.fillStyle = 'white';
-        canvasCtx.fillRect(0,canvas.height - keyboardHeight,canvas.width,keyboardHeight);
-        
+        canvasCtx.fillRect(0, canvas.height - keyboardHeight, canvas.width, keyboardHeight);
+
         canvasCtx.fillStyle = 'gray';
         for (let i = 0; i < 128; i++) {
             if (!isBlackKey(i)) {
@@ -212,7 +233,11 @@ function draw() {
         canvasCtx.fillStyle = '#b71c1c';
         canvasCtx.fillRect(0, canvas.height - keyboardHeight - noteWidth * 0.5, canvas.width, noteWidth * 0.5);
 
-        requestAnimationFrame(draw);
+        if (player.isPaused()) {
+            endAnimation();
+        } else {
+            requestAnimationFrame(draw);
+        }
     }
 }
 
@@ -224,6 +249,7 @@ function resizeCanvas() {
     noteWidth = canvas.width / 128;
     keyboardHeight = noteWidth * 9;
     blackKeyHeight = noteWidth * 5.5;
+    startAnimation();
 }
 onresize = resizeCanvas;
 
@@ -247,5 +273,13 @@ updateChecker(noteTransparencyBtn, config.noteTransparency);
 noteTransparencyBtn.addEventListener('click', e => {
     config.noteTransparency = !config.noteTransparency;
     updateChecker(noteTransparencyBtn, config.noteTransparency);
+    save();
+});
+
+let highlightNotes = $("#highlightNotes");
+updateChecker(highlightNotes, config.highlightNotes);
+highlightNotes.addEventListener('click', e => {
+    config.highlightNotes = !config.highlightNotes;
+    updateChecker(highlightNotes, config.highlightNotes);
     save();
 });

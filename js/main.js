@@ -6,7 +6,7 @@ let playing = [];
 let musicLoop = true;
 
 let prefix = location.pathname;
-let urlDir = location.hash.substring(1);
+let urlDir = location.hash.substring(2);
 
 let cdMem = '';
 let filesMem = [];
@@ -96,7 +96,7 @@ function list(ignoreCache = false) {
 
 /** Update File list (UI) */
 async function updateList(path, result) {
-    location.hash = "#" + path;
+    location.hash = "#!" + path;
     content.innerHTML = '';
 
     // Sorting files
@@ -169,7 +169,7 @@ function play(dir, file) {
     let url = dir + "/" + encodeURIComponent(file);
 
     document.title = serverName + " - " + file;
-    wav.setAttribute("href", "api/play" + url.replace('mid','mp3'));
+    wav.setAttribute("href", "api/play" + url.replace('.mid','.mp3'));
     mid.setAttribute("href", "api/midi" + url);
     midiInfo.setAttribute("value", url);
     songTitle.innerText = file;

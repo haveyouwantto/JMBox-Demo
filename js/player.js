@@ -65,7 +65,7 @@ function AudioPlayer() {
     this.load = function (path, callback) {
         bufferedBar.style.display = 'block';
         try {
-            this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace('mid','mp3');
+            this.audio.src = (config.midisrc ? "api/midi" : "api/play") + path.replace('.mid','.mp3');
             this.seek(0);
         } catch (error) {
             console.log(error.message);
@@ -96,6 +96,7 @@ function AudioPlayer() {
         playButton.innerText = '\ue00f';
         paused = false;
         this.audio.play();
+        startAnimation();
     }
 
     /**
@@ -222,6 +223,7 @@ function PicoAudioPlayer() {
      */
     this.load = function (path, callback) {
         this.seek(0);
+        endAnimation();
         fetch("api/midi" + path).then(r => {
             if (r.ok) {
                 r.arrayBuffer().then(data => {
@@ -259,6 +261,7 @@ function PicoAudioPlayer() {
         this.paused = false;
         picoAudio.play();
         this.intervalId = setInterval(updatePlayback, 100);
+        startAnimation();
     }
 
     /**
@@ -293,7 +296,7 @@ function PicoAudioPlayer() {
      */
     this.currentTime = function () {
         if (picoAudio.playData == null) return 0;
-        else if (this.paused) return this.lastPausedTime;
+        else if (!picoAudio.states.isPlaying) return this.lastPausedTime;
         else return picoAudio.context.currentTime - picoAudio.states.startTime;
     }
 
@@ -302,6 +305,7 @@ function PicoAudioPlayer() {
      * @param {float} seconds 
      */
     this.seek = function (seconds) {
+        this.lastPausedTime = seconds;
         let playing = picoAudio.states.isPlaying;
         picoAudio.stop();
         picoAudio.initStatus(false, true);
@@ -323,7 +327,7 @@ function PicoAudioPlayer() {
     }
 
     this.isPaused = function () {
-        return !picoAudio.states.isPlaying;
+        return this.paused;
     }
 
     this.isEnded = function () {
@@ -472,8 +476,8 @@ function updatePlayback() {
 // Player action
 
 progressBar.addEventListener('click', e => {
-    progressBarInner.style.width = (e.clientX / progressBar.clientWidth * 100) + "%";
     player.seekPercentage(e.clientX / progressBar.clientWidth);
+    updatePlayback();
 });
 
 function togglePause() {
